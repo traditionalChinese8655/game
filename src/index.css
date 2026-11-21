@@ -1,0 +1,314 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0b0e12;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+#game-root {
+  position: fixed;
+  inset: 0;
+}
+
+#game-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+#ui-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#ui-overlay .screen,
+#ui-overlay button,
+#help-panel {
+  pointer-events: auto;
+}
+
+/* ---------------------------------------------------------------- HUD */
+
+#hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: #e8f0e9;
+}
+
+#crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+#crosshair span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
+}
+#crosshair[data-tool="remover"] span {
+  background: #ff6b5e;
+  border-radius: 1px;
+  width: 10px;
+  height: 10px;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+#crosshair[data-tool="spawner"] span {
+  background: #7fd4ff;
+  border-radius: 1px;
+}
+#crosshair[data-hold="1"] span {
+  outline: 2px solid #66ffcc;
+  outline-offset: 3px;
+}
+
+#hover-label {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 22px);
+  transform: translateX(-50%);
+  font: 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #cfe8d8;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+#tool-line {
+  position: absolute;
+  left: 16px;
+  bottom: 40px;
+  font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #d5ecdc;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+#keys-line {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  font: 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgba(220, 240, 226, 0.55);
+}
+
+#prop-count {
+  position: absolute;
+  right: 16px;
+  top: 14px;
+  font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgba(220, 240, 226, 0.75);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------------------------------------------------------------- toasts */
+
+#toasts {
+  position: absolute;
+  left: 50%;
+  bottom: 96px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.toast {
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(12, 20, 16, 0.85);
+  border: 1px solid rgba(102, 255, 204, 0.35);
+  color: #d9f5e6;
+  font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s;
+  max-width: 70vw;
+  text-align: center;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.toast-error {
+  border-color: rgba(255, 107, 94, 0.55);
+  color: #ffd4ce;
+}
+
+/* ---------------------------------------------------------------- screens */
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(10, 18, 14, 0.55), rgba(6, 10, 8, 0.88));
+  color: #ecf5ee;
+  text-align: center;
+}
+.screen.open {
+  display: flex;
+}
+.screen h1 {
+  font-size: clamp(44px, 9vw, 92px);
+  letter-spacing: 0.08em;
+  margin: 0;
+  font-weight: 800;
+}
+.screen h1 span {
+  color: #66ffcc;
+}
+.screen h2 {
+  font-size: 42px;
+  letter-spacing: 0.2em;
+  margin: 0;
+}
+.tagline {
+  margin: 0;
+  color: #b9d6c3;
+  font-size: clamp(14px, 2vw, 18px);
+}
+.title-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #7fd4a8;
+  font: 14px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.fine {
+  color: rgba(220, 240, 226, 0.55);
+  font-size: 12px;
+  max-width: 520px;
+  margin: 0 20px;
+  line-height: 1.5;
+}
+
+.big-btn {
+  padding: 14px 44px;
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: #06231a;
+  background: linear-gradient(180deg, #7dffc9, #4ed8a4);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(102, 255, 204, 0.35);
+}
+.big-btn:hover {
+  filter: brightness(1.08);
+}
+.screen .row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.screen .row button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ecf5ee;
+  font-size: 14px;
+  cursor: pointer;
+}
+.screen .row button:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.screen .row button.danger {
+  border-color: rgba(255, 107, 94, 0.5);
+  color: #ffb3ab;
+}
+
+/* ---------------------------------------------------------------- help panel */
+
+#help-panel {
+  position: absolute;
+  right: 16px;
+  top: 48px;
+  width: min(460px, calc(100vw - 32px));
+  background: rgba(10, 18, 14, 0.92);
+  border: 1px solid rgba(102, 255, 204, 0.3);
+  border-radius: 12px;
+  padding: 16px 18px;
+  color: #d9f5e6;
+  display: none;
+}
+#help-panel.open {
+  display: block;
+}
+#help-panel h3 {
+  margin: 0 0 10px;
+  color: #66ffcc;
+}
+#help-panel h4 {
+  margin: 10px 0 4px;
+  color: #a9e8c8;
+}
+#help-panel p {
+  margin: 0;
+  font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #c4dcd0;
+}
+.help-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+#help-panel .fine {
+  margin-top: 10px;
+}
+
+/* ---------------------------------------------------------------- console */
+
+#console-box {
+  position: absolute;
+  left: 50%;
+  bottom: 24%;
+  transform: translate(-50%, 8px);
+  width: min(620px, 86vw);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(8, 14, 11, 0.92);
+  border: 1px solid rgba(102, 255, 204, 0.5);
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s, transform 0.15s;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+#console-box.open {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+#console-box .prompt {
+  color: #66ffcc;
+  font: 14px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+#console-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #eafff4;
+  font: 14px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+#console-input::placeholder {
+  color: rgba(200, 235, 215, 0.4);
+}
